@@ -15,12 +15,11 @@ for DS3 based on accelerometer value (which is a work of [sunnyqeen](https://git
 
 ## About this fork
 
-I've made this fork because some of the buttons on my controller started bouncing. Normally I would just add a
-feature that would fix my problem, make a pull request to the original repo and forget about the project. 
-The issue here is that Ryochan7 stopped maintaining the original project, so I decided to make slight 
-modifications to the code that detects if the installed version is up-to-date, so it now pulls version info from my 
-repo. This way if you install my version, you don't get the annoying popup saying your version is outdated. If there 
-are any feature requests, I'm more than happy to at least look at them and assess whether I could add them.
+Added support for the 8BitDo Ultimate 2 Wireless to the project.
+
+Functional with 8BitDo Ultimate 2 Wireless on D-Input mode.
+
+The reason for this fork was to pass an 8BitDo Ultimate 2 Wireless completely as a DS4 Controller, that has more support universally and not just through Steam Input. (Gyro also supported)
 
 ## License
 
