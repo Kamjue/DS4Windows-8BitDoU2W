@@ -33,7 +33,8 @@ namespace DS4Windows.InputDevices
         JoyConGrip,
         DualSense,
         DS3,
-        Vader4Pro
+        Vader4Pro,
+        EightBitDoU2W
     }
 
     public abstract class InputDeviceFactory
@@ -64,6 +65,9 @@ namespace DS4Windows.InputDevices
                     break;
                 case InputDeviceType.Vader4Pro:
                     temp = new Vader4ProDevice(hidDevice, disName, featureSet, macAddress);
+                    break;
+                case InputDeviceType.EightBitDoU2W:
+                    temp = new EightBitDoU2WDevice(hidDevice, disName, featureSet, macAddress);
                     break;
             }
 

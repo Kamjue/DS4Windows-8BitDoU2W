@@ -44,6 +44,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public bool EnableDS3 { get => serviceDeviceOpts.DS3DeviceOpts.Enabled; }
         public bool EnableVader4Pro { get => serviceDeviceOpts.Vader4ProDeviceOpts.Enabled; }
+        public bool EnableEightBitDoU2W { get => serviceDeviceOpts.EightBitDoU2WDeviceOpts.Enabled; }
 
         public DS4DeviceOptions DS4DeviceOpts { get => serviceDeviceOpts.DS4DeviceOpts; }
         public DS3DeviceOptions DS3DeviceOpts { get => serviceDeviceOpts.DS3DeviceOpts; }
@@ -51,6 +52,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public SwitchProDeviceOptions SwitchProDeviceOpts { get => serviceDeviceOpts.SwitchProDeviceOpts; }
         public JoyConDeviceOptions JoyConDeviceOpts { get => serviceDeviceOpts.JoyConDeviceOpts; }
         public Vader4ProDeviceOptions Vader4ProDeviceOpts { get => serviceDeviceOpts.Vader4ProDeviceOpts; }
+        public EightBitDoU2WDeviceOptions EightBitDoU2WDeviceOpts { get => serviceDeviceOpts.EightBitDoU2WDeviceOpts; }
 
         public bool UseMoonlightChanged
         {
@@ -124,6 +126,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             get => controllerOptionsStores[controllerSelectedIndex] as Vader4ProControllerOptions;
         }
 
+        public EightBitDoU2WControllerOptions CurrentEightBitDoU2WOptions
+        {
+            get => controllerOptionsStores[controllerSelectedIndex] as EightBitDoU2WControllerOptions;
+        }
+
         private int currentTabSelectedIndex = 0;
         public int CurrentTabSelectedIndex
         {
@@ -185,6 +192,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 case DS4Windows.InputDevices.InputDeviceType.Vader4Pro:
                     result = 5;
                     break;
+                case DS4Windows.InputDevices.InputDeviceType.EightBitDoU2W:
+                    result = 6;
+                    break;
                 default:
                     // Default to empty control
                     result = 0;
@@ -219,6 +229,9 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                     break;
                 case DS4Windows.InputDevices.InputDeviceType.Vader4Pro:
                     dataContextObject = new Vader4ProControllerOptionsWrapper(CurrentVader4ProOptions, serviceDeviceOpts.Vader4ProDeviceOpts);
+                    break;
+                case DS4Windows.InputDevices.InputDeviceType.EightBitDoU2W:
+                    dataContextObject = new EightBitDoU2WControllerOptionsWrapper(CurrentEightBitDoU2WOptions, serviceDeviceOpts.EightBitDoU2WDeviceOpts);
                     break;
                 default:
                     break;
@@ -334,6 +347,24 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public Vader4ProControllerOptionsWrapper(Vader4ProControllerOptions options,
             Vader4ProDeviceOptions parentOpts) {
+            this.options = options;
+            this.parentOptions = parentOpts;
+            parentOptions.EnabledChanged += (sender, e) => { VisibleChanged?.Invoke(this, EventArgs.Empty); };
+        }
+    }
+
+    public class EightBitDoU2WControllerOptionsWrapper
+    {
+        private EightBitDoU2WControllerOptions options;
+        public EightBitDoU2WControllerOptions Options { get => options; }
+
+        private EightBitDoU2WDeviceOptions parentOptions;
+        public bool Visible { get => parentOptions.Enabled; }
+        public event EventHandler VisibleChanged;
+
+        public EightBitDoU2WControllerOptionsWrapper(EightBitDoU2WControllerOptions options,
+            EightBitDoU2WDeviceOptions parentOpts)
+        {
             this.options = options;
             this.parentOptions = parentOpts;
             parentOptions.EnabledChanged += (sender, e) => { VisibleChanged?.Invoke(this, EventArgs.Empty); };

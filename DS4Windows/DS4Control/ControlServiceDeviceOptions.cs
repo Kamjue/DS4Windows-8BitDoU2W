@@ -50,6 +50,9 @@ namespace DS4Windows
         private Vader4ProDeviceOptions vader4proDeviceOpts = new Vader4ProDeviceOptions();
         public Vader4ProDeviceOptions Vader4ProDeviceOpts { get => vader4proDeviceOpts; }
 
+        private EightBitDoU2WDeviceOptions eightbitdou2wDeviceOpts = new EightBitDoU2WDeviceOptions();
+        public EightBitDoU2WDeviceOptions EightBitDoU2WDeviceOpts { get => eightbitdou2wDeviceOpts; }
+
         private bool verboseLogMessages;
         public bool VerboseLogMessages { get => verboseLogMessages; set => verboseLogMessages = value; }
 
@@ -653,6 +656,93 @@ namespace DS4Windows
                 using var stringReader = new StringReader(baseNode.OuterXml);
                 using var xmlReader = XmlReader.Create(stringReader);
                 Vader4ProControllerOptsDTO dto = serializer.Deserialize(xmlReader) as Vader4ProControllerOptsDTO;
+                dto.MapTo(this);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+    }
+
+    public class EightBitDoU2WDeviceOptions
+    {
+        public const bool DEFAULT_ENABLE = true;
+        private bool enabled = DEFAULT_ENABLE;
+        public bool Enabled
+        {
+            get => enabled;
+            set
+            {
+                if (enabled == value) return;
+                enabled = value;
+                EnabledChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public event EventHandler EnabledChanged;
+    }
+
+    public class EightBitDoU2WControllerOptions: ControllerOptionsStore
+    {
+        public const string XML_ELEMENT_NAME = "EightBitDoU2WSupportSettings";
+
+        public EightBitDoU2WControllerOptions(InputDeviceType deviceType) : base(deviceType)
+        {
+        }
+
+        public override void PersistSettings(XmlDocument xmlDoc, XmlNode node)
+        {
+            string testStr = string.Empty;
+            XmlSerializer serializer = new XmlSerializer(typeof(EightBitDoU2WControllerOptsDTO));
+
+            using (Utf8StringWriter strWriter = new Utf8StringWriter())
+            {
+                using XmlWriter xmlWriter = XmlWriter.Create(strWriter,
+                    new XmlWriterSettings()
+                    {
+                        Encoding = Encoding.UTF8,
+                        Indent = false,
+                        OmitXmlDeclaration = true, // only partial XML with no declaration
+                    });
+
+                // Write root element and children
+                EightBitDoU2WControllerOptsDTO dto = new EightBitDoU2WControllerOptsDTO();
+                dto.MapFrom(this);
+                // Omit xmlns:xsi and xmlns:xsd from output
+                serializer.Serialize(xmlWriter, dto,
+                    new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
+                xmlWriter.Flush();
+                xmlWriter.Close();
+
+                testStr = strWriter.ToString();
+                //Trace.WriteLine("TEST OUTPUT");
+                //Trace.WriteLine(testStr);
+            }
+
+            XmlNode tempSwitchProNode = xmlDoc.CreateDocumentFragment();
+            tempSwitchProNode.InnerXml = testStr;
+
+            XmlNode tempOptsNode = node.SelectSingleNode(XML_ELEMENT_NAME);
+            if (tempOptsNode != null)
+            {
+                node.RemoveChild(tempOptsNode);
+            }
+
+            tempOptsNode = tempSwitchProNode;
+            node.AppendChild(tempOptsNode);
+        }
+
+        public override void LoadSettings(XmlDocument xmlDoc, XmlNode node)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(EightBitDoU2WControllerOptsDTO));
+            XmlNode baseNode = node.SelectSingleNode(XML_ELEMENT_NAME);
+            if (baseNode == null)
+                return;
+
+            try
+            {
+                using var stringReader = new StringReader(baseNode.OuterXml);
+                using var xmlReader = XmlReader.Create(stringReader);
+                EightBitDoU2WControllerOptsDTO dto = serializer.Deserialize(xmlReader) as EightBitDoU2WControllerOptsDTO;
                 dto.MapTo(this);
             }
             catch (InvalidOperationException)

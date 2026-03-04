@@ -139,6 +139,8 @@ namespace DS4Windows
         internal const int JOYCON_CHARGING_GRIP_PRODUCT_ID = 0x200E;
         internal const int FLYDIGI_VID = 0x04B4;
         internal const int VADER4PRO_PID = 0x2412;
+        internal const int EIGHTBITDO_VID = 0x2DC8;
+        internal const int ULTIMATE2WIRELESS_PID = 0x6012;
 
         // https://support.steampowered.com/kb_article.php?ref=5199-TOKV-4426&l=english web site has a list of other PS4 compatible device VID/PID values and brand names. 
         // However, not all those are guaranteed to work with DS4Windows app so support is added case by case when users of DS4Windows app tests non-official DS4 gamepads.
@@ -187,7 +189,8 @@ namespace DS4Windows
             new VidPidInfo(0x044F, 0xD00E, "Thrustmaster eSwap Pro", InputDeviceType.DS4, VidPidFeatureSet.NoGyroCalib | VidPidFeatureSet.NoBatteryReading), // Thrustmaster eSwap Pro (wired only. No lightbar or gyro)
             new VidPidInfo(0x054C, 0x0268, "DualShock 3 (SXS)", InputDeviceType.DS3, VidPidFeatureSet.DefaultDS4, checkConnection: DS3Device.DetermineConnectionType), // Sony DualShock 3 using DsHidMini driver (SXS) or Sony Sixaxis driver
             new VidPidInfo(0x0C12, 0x0E15, "Playmax Wired Controller (PS4)", InputDeviceType.DS4, VidPidFeatureSet.NoBatteryReading | VidPidFeatureSet.NoGyroCalib), // Generic PS4 Controller by Playmax (brand primarily in New Zealand). Standard Wired PS4 controller, no Gyro, no Lightbar, no Battery. There is a newer model but I'm not sure if it uses a different Vid or Pid yet.
-            new VidPidInfo(FLYDIGI_VID,VADER4PRO_PID,"Flydigi Vader 4 Pro",InputDeviceType.Vader4Pro,VidPidFeatureSet.DefaultDS4 | VidPidFeatureSet.NoBatteryReading| VidPidFeatureSet.NoGyroCalib|VidPidFeatureSet.VendorDefinedDevice)
+            new VidPidInfo(FLYDIGI_VID,VADER4PRO_PID,"Flydigi Vader 4 Pro",InputDeviceType.Vader4Pro,VidPidFeatureSet.DefaultDS4 | VidPidFeatureSet.NoBatteryReading| VidPidFeatureSet.NoGyroCalib|VidPidFeatureSet.VendorDefinedDevice),
+            new VidPidInfo(EIGHTBITDO_VID,ULTIMATE2WIRELESS_PID,"8BitDo Ultimate 2 Wireless",InputDeviceType.EightBitDoU2W,VidPidFeatureSet.DefaultDS4 | VidPidFeatureSet.NoBatteryReading| VidPidFeatureSet.NoGyroCalib|VidPidFeatureSet.VendorDefinedDevice)
         };
 
 
@@ -355,6 +358,10 @@ namespace DS4Windows
                         else if (metainfo.inputDevType == InputDeviceType.Vader4Pro)
                         {
                             serial = hDevice.GetVader4ProMacAddress();
+                        }
+                        else if (metainfo.inputDevType == InputDeviceType.EightBitDoU2W)
+                        {
+                            serial = hDevice.GetEightBitDoU2WMacAddress();
                         }
                         else
                         {

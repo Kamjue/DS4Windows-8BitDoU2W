@@ -595,6 +595,9 @@ namespace DS4Windows
                 case InputDevices.InputDeviceType.Vader4Pro:
                     result = deviceOptions.Vader4ProDeviceOpts.Enabled;
                     break;
+                case InputDevices.InputDeviceType.EightBitDoU2W:
+                    result = deviceOptions.EightBitDoU2WDeviceOpts.Enabled;
+                    break;
                 default:
                     break;
             }
@@ -807,6 +810,9 @@ namespace DS4Windows
                     break;
                 case InputDevices.InputDeviceType.Vader4Pro:
                     result.AddRange(new DS4Controls[] { DS4Controls.FnL, DS4Controls.FnR, DS4Controls.BLP, DS4Controls.BRP, DS4Controls.SideL, DS4Controls.SideR, DS4Controls.Capture });
+                    break;
+                case InputDevices.InputDeviceType.EightBitDoU2W:
+                    result.AddRange(new DS4Controls[] { DS4Controls.FnL, DS4Controls.FnR, DS4Controls.BLP, DS4Controls.BRP });
                     break;
                 default:
                     break;
