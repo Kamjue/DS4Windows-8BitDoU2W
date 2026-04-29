@@ -219,11 +219,11 @@ namespace DS4Windows.InputDevices
                         cState.Capture = report.IsFNPressed;
                         // Gyro / Accelerometer
                         short yaw = (short)(report.YawCalibrated);
-                        short pitch = (short)-report.PitchCalibrated;
-                        short roll = (short)(report.RollCalibrated);
+                        short pitch = (short)-(report.PitchCalibrated);
+                        short roll = (short)-(report.RollCalibrated);
                         short ax = (short)-(report.AccelXCalibrated);
-                        short ay = (short)-(report.AccelYCalibrated);
-                        short az = (short)(report.AccelZCalibrated);
+                        short ay = (short)(report.AccelYCalibrated);
+                        short az = (short)-(report.AccelZCalibrated);
                         if (synced)
                         {
                             sixAxis.handleSixaxisVals(yaw, pitch, roll, ax, ay, az, cState, elapsedDeltaTime);

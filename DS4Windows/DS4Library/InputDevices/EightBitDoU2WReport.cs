@@ -71,15 +71,18 @@ namespace EightBitDoU2WReader.Device
         public short PitchRaw => BitConverter.ToInt16(rawReport.Span[23..25]);
         public short YawRaw => BitConverter.ToInt16(rawReport.Span[25..27]);
 
+        public float PitchOffset => 0.370f;
+        public float YawOffset => 0.005f;
+
         // F_GYRO_DPS_SCALE in U2W is 14.2824f. DS4 Standard is 16.384f. We scale Gyro.
-        public short YawCalibrated => (short)Math.Clamp(YawRaw * (16.384f / 14.2824f), short.MinValue, short.MaxValue);
-        public short PitchCalibrated => (short)Math.Clamp(PitchRaw * (16.384f / 14.2824f), short.MinValue, short.MaxValue);
-        public short RollCalibrated => (short)Math.Clamp(RollRaw * (16.384f / 14.2824f), short.MinValue, short.MaxValue);
+        public short YawCalibrated => (short)Math.Clamp((YawRaw - YawOffset) * (16.384f / 16.9f), short.MinValue, short.MaxValue);
+        public short PitchCalibrated => (short)Math.Clamp((PitchRaw - PitchOffset) * (16.384f / 16.9f), short.MinValue, short.MaxValue);
+        public short RollCalibrated => (short)Math.Clamp(RollRaw * (16.384f / 16.9f), short.MinValue, short.MaxValue);
 
         // F_ACC_RES_PER_G in U2W is 4096. DS4 Standard is 8192. We scale Accel.
         public short AccelXCalibrated => (short)Math.Clamp(AccelXRaw * 2, short.MinValue, short.MaxValue);
-        public short AccelYCalibrated => (short)Math.Clamp(AccelYRaw * 2, short.MinValue, short.MaxValue);
-        public short AccelZCalibrated => (short)Math.Clamp(AccelZRaw * 2, short.MinValue, short.MaxValue);
+        public short AccelYCalibrated => (short)Math.Clamp(AccelZRaw * 2, short.MinValue, short.MaxValue);
+        public short AccelZCalibrated => (short)Math.Clamp(AccelYRaw * 2, short.MinValue, short.MaxValue);
 
         public bool IsAirMouseActive => false;
     }
